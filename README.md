@@ -1,4 +1,3 @@
-Final README.md (with embedded screengrabs)
 # Threat Hunting Lab 02 – Internal Network Port Scanning Detection
 
 ## Overview
@@ -26,6 +25,7 @@ DeviceNetworkEvents
 | where ActionType == "ConnectionFailed"
 | summarize ConnectionCount = count() by DeviceName, ActionType, LocalIP, RemoteIP
 | order by ConnectionCount desc
+```
 
 
 📸 Observed failed connection volume across multiple internal hosts:
@@ -41,7 +41,7 @@ This behavior is inconsistent with normal application traffic and aligns with re
 ### 3. Endpoint Process Correlation
 
 To determine the source of the network activity, the investigation pivoted to endpoint process telemetry during the time of the scan.
-
+```
 let VMName = "vm-mde";
 let specificTime = datetime(2026-01-28T04:28:43.3403645Z);
 DeviceProcessEvents
@@ -49,7 +49,7 @@ DeviceProcessEvents
 | where DeviceName == VMName
 | order by Timestamp desc
 | project Timestamp, FileName, InitiatingProcessCommandLine
-
+```
 
 📸 PowerShell process launching the port scan script:
 
