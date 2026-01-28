@@ -27,7 +27,7 @@ DeviceNetworkEvents
 | order by ConnectionCount desc
 ```
 
-![Failed connection summary](<img width="763" height="188" alt="image" src="https://github.com/user-attachments/assets/47d4febb-36c6-42a2-826b-018a15eb8cc0" />)
+[Failed connection summary](<img width="763" height="188" alt="image" src="https://github.com/user-attachments/assets/47d4febb-36c6-42a2-826b-018a15eb8cc0" />)
 
 ---
 
