@@ -27,21 +27,21 @@ DeviceNetworkEvents
 | order by ConnectionCount desc
 ```
 
+![Failed connection summary](images/network-failed-connections-summary.png)
 
-📸 Observed failed connection volume across multiple internal hosts:
+---
 
 ### 2. Identification of Port Scanning Behavior
+After sorting events chronologically, one internal host (**10.0.0.202**) displayed sequential failed connection attempts across increasing port numbers — a strong indicator of automated port scanning.
 
-After sorting events chronologically, one internal host (10.0.0.202) displayed sequential failed connection attempts across increasing port numbers — a strong indicator of automated port scanning.
+![Failed connections by host](images/failed-connections-by-host.png)
 
-📸 Failed connections attributed to the suspected host:
-
-This behavior is inconsistent with normal application traffic and aligns with reconnaissance activity.
+---
 
 ### 3. Endpoint Process Correlation
+Endpoint process telemetry was reviewed during the timeframe of the scan.
 
-To determine the source of the network activity, the investigation pivoted to endpoint process telemetry during the time of the scan.
-```
+```kql
 let VMName = "vm-mde";
 let specificTime = datetime(2026-01-28T04:28:43.3403645Z);
 DeviceProcessEvents
@@ -51,59 +51,49 @@ DeviceProcessEvents
 | project Timestamp, FileName, InitiatingProcessCommandLine
 ```
 
-📸 PowerShell process launching the port scan script:
+![PowerShell port scan process](images/powershell-portscan-process.png)
 
-A PowerShell script named portscan.ps1 executed during the same timeframe as the anomalous network activity.
+---
 
 ### 4. Script Analysis & Privilege Context
+Manual inspection confirmed a PowerShell script (`portscan.ps1`) executed under the SYSTEM account.
 
-Manual inspection of the endpoint confirmed the presence of the PowerShell port scanning script.
+![Port scan script](images/portscan-script-code.png)
 
-📸 Observed port scanning script (portscan.ps1):
+---
 
-Key findings:
+## Response Actions
+- Isolated the affected endpoint using MDE
+- Performed a full malware scan (no malware detected)
+- Maintained isolation due to SYSTEM-level execution
+- Submitted the device for reimaging/rebuild
 
-Script scanned a defined IP range and common ports
+---
 
-Execution occurred under the SYSTEM account
+## MITRE ATT&CK Mapping
 
-Activity was not authorized or scheduled by administrators
+| Tactic | Technique | Description |
+|------|----------|------------|
+| Reconnaissance | T1046 | Network Service Discovery |
+| Execution | T1059.001 | PowerShell |
+| Privilege Escalation / Defense Evasion | T1078 | Valid Accounts (SYSTEM) |
+| Discovery | T1049 | System Network Connections Discovery |
+| Lateral Movement (Potential) | T1021 | Remote Services |
 
-Response Actions
+---
 
-Isolated the affected endpoint using Microsoft Defender for Endpoint
+## Final Assessment
+- Unauthorized internal reconnaissance activity confirmed
+- No lateral movement or data exfiltration observed
+- Early detection prevented escalation
+- Security posture improved
 
-Performed a full malware scan (no malware detected)
+---
 
-Maintained isolation due to SYSTEM-level execution
+## Skills Demonstrated
+- Microsoft Defender for Endpoint threat hunting
+- Advanced KQL analysis
+- Network + endpoint telemetry correlation
+- MITRE ATT&CK mapping
+- Incident response and remediation
 
-Submitted the device for reimaging/rebuild as a precaution
-
-MITRE ATT&CK Mapping
-Tactic	Technique	Description
-Reconnaissance	T1046 – Network Service Discovery	Sequential internal port scanning detected
-Execution	T1059.001 – PowerShell	PowerShell used to execute scanning script
-Privilege Escalation / Defense Evasion (Contextual)	T1078 – Valid Accounts (SYSTEM)	Script executed under SYSTEM context
-Discovery	T1049 – System Network Connections Discovery	Internal network enumeration
-Lateral Movement (Potential)	T1021 – Remote Services	Activity could enable lateral movement
-Final Assessment
-
-Unauthorized internal reconnaissance activity confirmed
-
-No evidence of lateral movement or data exfiltration
-
-Early detection prevented escalation
-
-Endpoint remediation improved security posture
-
-Skills Demonstrated
-
-Threat hunting with Microsoft Defender for Endpoint
-
-Advanced KQL querying and pivoting
-
-Network + endpoint telemetry correlation
-
-MITRE ATT&CK framework mapping
-
-Incident response and containment
