@@ -33,7 +33,14 @@ DeviceNetworkEvents
 
 ### 2. Identification of Port Scanning Behavior
 After sorting events chronologically, one internal host (**10.0.0.202**) displayed sequential failed connection attempts across increasing port numbers — a strong indicator of automated port scanning.
-<img width="724" height="207" alt="Screenshot 2026-01-28 001346" src="https://github.com/user-attachments/assets/ce5defec-3f55-435d-85a2-97c24bbfb014" />
+```kql
+let IPInQuestion = "10.1.0.202";
+DeviceNetworkEvents
+| where ActionType == "ConnectionFailed"
+| where LocalIP == IPInQuestion
+| order by Timestamp desc
+```
+<img width="1003" height="273" alt="image" src="https://github.com/user-attachments/assets/5e440a83-8a94-4b66-99c9-2e3cc026a4bc" />
 
 
 ---
