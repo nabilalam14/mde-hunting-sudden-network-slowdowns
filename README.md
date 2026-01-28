@@ -33,8 +33,8 @@ DeviceNetworkEvents
 
 ### 2. Identification of Port Scanning Behavior
 After sorting events chronologically, one internal host (**10.0.0.202**) displayed sequential failed connection attempts across increasing port numbers — a strong indicator of automated port scanning.
+<img width="724" height="207" alt="Screenshot 2026-01-28 001346" src="https://github.com/user-attachments/assets/ce5defec-3f55-435d-85a2-97c24bbfb014" />
 
-![Failed connections by host](images/failed-connections-by-host.png)
 
 ---
 
@@ -50,15 +50,17 @@ DeviceProcessEvents
 | order by Timestamp desc
 | project Timestamp, FileName, InitiatingProcessCommandLine
 ```
+<img width="1018" height="158" alt="Screenshot 2026-01-28 001927" src="https://github.com/user-attachments/assets/97a5984b-bf65-4578-8111-baf0d9b37f1e" />
 
-![PowerShell port scan process](images/powershell-portscan-process.png)
+
+
 
 ---
 
 ### 4. Script Analysis & Privilege Context
 Manual inspection confirmed a PowerShell script (`portscan.ps1`) executed under the SYSTEM account.
 
-![Port scan script](images/portscan-script-code.png)
+<img width="1118" height="297" alt="image" src="https://github.com/user-attachments/assets/760e7620-df47-49f1-9a4c-69a94ff1e092" />
 
 ---
 
