@@ -1,4 +1,4 @@
-# Threat Hunting Lab 02 – Internal Network Port Scanning Detection
+# Threat Hunting Lab 02 – Hidden Network Slowdowns
 
 ## Overview
 This project documents a threat-hunting investigation conducted using **Microsoft Defender for Endpoint (MDE)** after internal teams reported significant network slowdowns. The hunt identified unauthorized internal port-scanning activity originating from a compromised endpoint.
